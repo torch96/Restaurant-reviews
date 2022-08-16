@@ -1,15 +1,15 @@
 using System;
-using System.collection.Generic;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Restaurant.Models;
-using Restaurant.Models.Projections;
+using RestaurantReview.Models;
+using RestaurantReview.Models.Projections;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 
-namespace Restaurant.Repositories
+namespace RestaurantReview.Repositories
 {
     public class RestaurantsRepository
     {
@@ -27,14 +27,52 @@ namespace Restaurant.Repositories
             _mongoClient = mongoClient;
         }
 
-        public async Task<IReadOnlyList<Restaurant>> GetRestaurantsAsync(int page, CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<Restaurant>> GetRestaurantsAsync(int perPage = RestaurantsPerPage, int page = 0,
+        
+            CancellationToken cancellationToken = default)
         {
-            var restaurants = await _restaurantsCollection.Find(new BsonDocument())
-                .Sort(Builders<Restaurant>.Sort.Ascending(r => r.Name))
-                .Skip(RestaurantsPerPage * (page - 1))
-                .Limit(RestaurantsPerPage)
+           var skip = page * perPage;
+           var limit = perPage;
+            var restaurants = await _restaurantsCollection.Find(Builders<Restaurant>.Filter.Empty)  
+                .Sort(Builders<Restaurant>.Sort.Ascending(r => r.name))
+                .Skip(skip)
+                .Limit(limit)
                 .ToListAsync(cancellationToken);
             return restaurants;
+        }
+
+        public async Task<Restaurant> GetRestaurantAsync(string restaurantId, CancellationToken cancellationToken = default)
+        {
+           /* var restaurant = await _restaurantsCollection.Find(Builders<Restaurant>.Filter.Eq(r => r.Id, restaurantId))
+                .FirstOrDefaultAsync(cancellationToken);
+            return restaurant;*/
+            return await  _restaurantsCollection.Aggregate()
+                .Match(Builders<Restaurant>.Filter.Eq(r => r.Id, restaurantId))
+                .Lookup<Restaurant, Review, Restaurant>(_reviewsCollection, r => r.Id, r => r.RestaurantId, r => r.Reviews)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+        /*public async Task<Restaurant> GetRestaurantAsync(string restaurantName, CancellationToken cancellationToken = default)
+        {
+            var restaurant = await _restaurantsCollection.Find(Builders<Restaurant>.Filter.Eq(r => r.name, restaurantName))
+                .FirstOrDefaultAsync(cancellationToken);
+            return restaurant;
+        }*/
+        
+      
+        
+        public async Task<long> GetRestaurantsCountAsync(){
+            return await _restaurantsCollection.CountDocumentsAsync(Builders<Restaurant>.Filter.Empty);
+        }
+
+        public async Task<IReadOnlyList<Restaurant>> GetRestaurantsByTextAsync(CancellationToken cancellationToken = default,  int page = 0,  params string[] keywords)
+        {
+            var x = await _restaurantsCollection
+                .Find(Builders<Restaurant>.Filter.Text(string.Join(",", keywords)))
+                 .Sort(Builders<Restaurant>.Sort.Ascending(r => r.name))
+                .Limit(RestaurantsPerPage)
+                .Skip(page * RestaurantsPerPage)
+                .ToListAsync(cancellationToken);
+           return x;
         }
     }
 }

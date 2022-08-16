@@ -4,7 +4,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 
-namespace Restaurant.Models
+namespace RestaurantReview.Models
 {
     public class User{
         [BsonElement("_id")]

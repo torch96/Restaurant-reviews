@@ -3,27 +3,27 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Restaurant.Models;
-using Restaurant.Models.Responses;
-using Restaurant.Repositories;
+using RestaurantReview.Models;
+using RestaurantReview.Models.Responses;
+using RestaurantReview.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 
-namespace Restaurnt.Controllers
+namespace RestaurantReview.Controllers
 {
-    [route("api/v1/users")]
+    [Route("api/v1/users")]
     [ApiController]
     public class UserController : ControllerBase
     {
         private readonly IOptions<JwtAuthentication> _jwtAuthentication;
-        private readonly UsersRepository _userRepository;
-        private readonly ReviewssRepository _reviewsRepository;
+        private readonly UserRepository _userRepository;
+        private readonly ReviewRepository _reviewsRepository;
 
-        public UserController(UsersRepository usersRepository,
-            ReviewsRepository reviewsRepository,
+        public UserController(UserRepository usersRepository,
+            ReviewRepository reviewsRepository,
             IOptions<JwtAuthentication> jwtAuthentication)
         {
             _userRepository = usersRepository;
@@ -33,7 +33,7 @@ namespace Restaurnt.Controllers
 
     
         [HttpGet]
-        public async Task<ActionResult> Get([RequiredFromQuery] string email)
+        public async Task<ActionResult> Get( string email)
         {
             var user = await _userRepository.GetUserAsync(email);
             user.AuthToken = _jwtAuthentication.Value.GenerateToken(user);
@@ -58,29 +58,60 @@ namespace Restaurnt.Controllers
             }
             if (errors.Count > 0)
             {
-                return BadRequest(new ErrorResponse(errors));
+                return BadRequest(new {error = errors});
             }
-            await _userRepository.AddUserAsync(user);
-            user.AuthToken = _jwtAuthentication.Value.GenerateToken(user);
+            var response = await _userRepository.CreateUserAsync(user.Name, user.Password,  user.Email);
+           if( response.User != null) response.User.AuthToken = _jwtAuthentication.Value.GenerateToken(response.User);
+            if(!response.Success)
+            {
+                return BadRequest(new { error = response.ErrorMessage });
+            }
             return Ok(user);
+        }
+    
+
+        [HttpPost("/api/v1/user/login")]
+        public async Task<ActionResult> Login([FromBody] User user)
+        {
+            user.AuthToken = _jwtAuthentication.Value.GenerateToken(user);
+            var result = await _userRepository.LoginUserAsync(user);
+            return result.User != null ? Ok(new UserResponse(result.User)) : Ok(result);
+        }
+
+        [HttpPost("/api/v1/user/logout")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult> Logout()
+        {
+            var email = GetUserEmailFromToken(Request);
+            if (email.StartsWith("Error")) return BadRequest(email);
+
+            var result = await _userRepository.LogoutUserAsync(email);
+            return Ok(result);
+        }
+
+        private static string GetUserEmailFromToken(HttpRequest request)
+        {
+            var bearer = request.Headers.ToArray().FirstOrDefault(x => x.Key == "Authorization").Value.First().Substring(7);
+        
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(bearer);
+
+            var claims = token.Claims;
+
+            var email = claims.FirstOrDefault(x => x.Type == "email").Value;
+
+            return email;
+        }
+        public static async Task<User> GetUserFromTokenAsync( UserRepository userRepository, HttpRequest request)
+        {
+            var email = GetUserEmailFromToken(request);
+            
+            return await userRepository.GetUserAsync(email);
         }
     }
 
-    [HttpPost("/api/v1/user/login")]
-    public async Task<ActionResult> Login([FromBody] User user)
+    public class PasswordObject
     {
-        user.AuthToken = _jwtAuthentication.Value.GenerateToken(user);
-        var result = await _userRepository.LoginUserAsync(user);
-        return result.User != null ? Ok(new UserResponse(result.User)) : Ok(result);
-    }
-
-    [HttpPost("/api/v1/user/logout")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult> Logout()
-    {
-        var user = await _userRepository.GetUserAsync(User.Identity.Name);
-        user.AuthToken = null;
-        await _userRepository.UpdateUserAsync(user);
-        return Ok();
+        public string Password { get; set; }
     }
 }

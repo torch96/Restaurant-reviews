@@ -1,7 +1,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace Restaurant
+namespace RestaurantReview
 {
     public static class PasswordManager
     {

@@ -1,19 +1,21 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Restaurant.Models;
-using Restaurant.Repositories;
+using RestaurantReview.Models;
+using RestaurantReview.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
-
-namespace Restaurant.Controllers
+using MongoDB.Bson.Serialization.Attributes;
+using RestaurantReview.Models.Responses;
+namespace RestaurantReview.Controllers
 {
 
 
-    public class RestaurantControllers : Controller
+    public class RestaurantController : Controller
     {
-        private readonly RestaurantRepository _restaurantRepository;
-        public RestaurantController(RestaurantRepository restaurantRepository)
+        private readonly RestaurantsRepository _restaurantRepository;
+        
+        public RestaurantController(RestaurantsRepository restaurantRepository)
         {
             _restaurantRepository = restaurantRepository;
         }
@@ -33,16 +35,16 @@ namespace Restaurant.Controllers
             string sort = "name", int sortDirection = -1,
             CancellationToken cancellationToken = default)
         {
-            var restaurants = await _restaurantRepository.GetRestaurantsAsync(limit, page, sort, sortDirection, cancellationToken);
+            var restaurants = await _restaurantRepository.GetRestaurantsAsync(limit, page, cancellationToken);
 
             var restaurantCount = page == 0 ? await _restaurantRepository.GetRestaurantsCountAsync() : -1;
             return Ok(new RestaurantResponse(restaurants, restaurantCount, page, null));
         }
 
         [HttpGet("api/v1/restaurants/")]
-        public async Task<ActionResult> GetRestaurantsByTextAsync(page: page, keywords: keywords, limit: limit, sort: sort, sortDirection: sortDirection, cancellationToken = default)
+        public async Task<ActionResult> GetRestaurantsByTextAsync(CancellationToken cancellationToken = default, int page = 0,   params string[] keywords)
         {
-            var restaurants = await _restaurantRepository.GetRestaurantsByTextAsync(page, keywords, limit, sort, sortDirection, cancellationToken);
+            var restaurants = await _restaurantRepository.GetRestaurantsByTextAsync( cancellationToken, page, keywords);
             var restaurantCount = page == 0 ? await _restaurantRepository.GetRestaurantsCountAsync() : -1;
             return Ok(new RestaurantResponse(restaurants, restaurantCount, page, null));
         }

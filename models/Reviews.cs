@@ -3,7 +3,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 
-namespace Restaurant.Models
+namespace RestaurantReview.Models
 {
     public class Review
     {   
@@ -20,5 +20,6 @@ namespace Restaurant.Models
         [JsonProperty("restaurnat_id")]
         [JsonIgnore]
         public ObjectId RestaurantId { get; set; }
+        
     }
 }

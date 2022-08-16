@@ -1,8 +1,8 @@
 using System;
-using System.linq;
+using System.Linq;
 using System.Threading.Tasks;
-using Restaurant.Models.Responses;
-using Restaurant.Repositories;
+using RestaurantReview.Models.Responses;
+using RestaurantReview.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
@@ -10,16 +10,16 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 
-namespace Restaurant.Controllers
+namespace RestaurantReview.Controllers
 {
     public class ReviewController : ControllerBase
     {
-        private readonly ReviewsRepository _reviewsRepository;
+        private readonly ReviewRepository _reviewsRepository;
         private readonly IOptions<JwtAuthentication> _jwtAuthentication;
-        private readonly UsersRepository _userRepository;
+        private readonly UserRepository _userRepository;
 
-        public ReviewController(ReviewsRepository reviewsRepository,
-            UsersRepository userRepository, IOptions<JwtAuthentication> jwtAuthentication)
+        public ReviewController(ReviewRepository reviewsRepository,
+            UserRepository userRepository, IOptions<JwtAuthentication> jwtAuthentication)
         {
             _reviewsRepository = reviewsRepository;
             _userRepository = userRepository;
@@ -47,10 +47,11 @@ namespace Restaurant.Controllers
             var user = await UserController.GetUserFromTokenAsync(_userRepository, Request);
 
             var restaurantId = new ObjectId(input.RestaurantId);
-            var result = await _reviewsRepository.UpdateReviewAsync(user, restaurantId, input.Review);
+            var reviewId = new ObjectId(input.reviewId);
+            var result = await _reviewsRepository.UpdateReviewAsync( restaurantId, reviewId,  user, input.Review);
 
             return result != null
-                ? (ActionResult)Ok(new ReviewResponse(result.Reviews.OrderByDescending(d => d.Date).ToList()))
+                ? (ActionResult)Ok(new ReviewResponse())
                 : BadRequest(new ReviewResponse());
         }
 
@@ -58,13 +59,13 @@ namespace Restaurant.Controllers
         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> DeleteReviewAsync([FromBody] RestaurantReviewInput input)
         {
-            var user = await UserController.GetUserFromTokenAsync(_userRepository, Request);
-
             var restaurantId = new ObjectId(input.RestaurantId);
-            var result = await _reviewsRepository.DeleteReviewAsync(user, restaurantId, input.Review);
+            var reviewId = new ObjectId(input.reviewId);
+            var user = await UserController.GetUserFromTokenAsync(_userRepository, Request);
+            var result = await _reviewsRepository.DeleteReviewAsync(restaurantId, reviewId, user);
 
             return result != null
-                ? (ActionResult)Ok(new ReviewResponse(result.Reviews.OrderByDescending(d => d.Date).ToList()))
+                ? (ActionResult)Ok(new ReviewResponse())
                 : BadRequest(new ReviewResponse());
         }
     }
@@ -75,8 +76,8 @@ namespace Restaurant.Controllers
         public string RestaurantId { get; set; }
 
         [BsonId]
-        [BsonRepresentation("review_id")]
-        public string ReviewId { get; set; }
+        [JsonProperty("review_id")]
+        public string reviewId { get; set; }
         public string Review { get; set; }
 
         [JsonProperty("updated_review")]

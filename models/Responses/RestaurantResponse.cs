@@ -1,6 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using RestaurantReview.Models.Projections;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
-
-namespace Restaurant.Models.Responses
+namespace RestaurantReview.Models.Responses
 {
     public class RestaurantResponse
     {
@@ -8,16 +15,12 @@ namespace Restaurant.Models.Responses
         
         public RestaurantResponse(Restaurant restaurant)
         {
-            if(restaurant == null)
-            {
-                Success = false;
-                ErrorMessage = "Restaurant not found";
-            }
-            else
-            {
-                Success = true;
-                Restaurant = restaurant;
-            }
+           if(Restaurant  != null)
+           {
+               Restaurant = restaurant;
+               Api = "csharp";
+               UpdatedType = (restaurant.LastUpdated is DateTime) ? "Date" : "Other";
+           }
         }
         public RestaurantResponse(IReadOnlyList<Restaurant> restaurants, long totalRestaurantCount, int page, Dictionary<string, object> filters)
         {
@@ -28,15 +31,7 @@ namespace Restaurant.Models.Responses
             Filters = filters ?? new Dictionary<string, object>();
         }
 
-        public RestaurantResponse(IReadOnlyList<RestaurantByCountryProjection> restaurantsByCountry, long totalRestaurantCount, int page, Dictionary<string, object> filters)
-        {
-            Restaurants = restaurantsByCountry.Select(x => new KeyValuePair<ObjectId, string>(x.Id, x.Name)).ToList();
-            EntriesPerPage = RESTAURANTS_PER_PAGE;
-            RestaurantsCount = totalRestaurantCount;
-            Page = page;
-            Filters = filters ?? new Dictionary<string, object>();
-        }
-
+    
         public RestaurantResponse(IReadOnlyList<RestaurantByTextProjection> restaurants, long totalRestaurantCount, int page, Dictionary<string, object> filters)
         {
             Restaurants = restaurants;
@@ -46,10 +41,26 @@ namespace Restaurant.Models.Responses
             Filters = filters ?? new Dictionary<string, object>();
         }
 
-        [JsonProperty("restaurant", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("Restaurant", NullValueHandling = NullValueHandling.Ignore)]
         public Restaurant Restaurant { get; set; }
 
-        [JsonProperty("restaurants", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("Restaurants", NullValueHandling = NullValueHandling.Ignore)]
+        public IReadOnlyList<Restaurant> Restaurants { get; set; }
+        [JsonProperty("RestaurantsCount", NullValueHandling = NullValueHandling.Ignore)]
+        public long RestaurantsCount { get; set; }
+        [JsonProperty("EntriesPerPage", NullValueHandling = NullValueHandling.Ignore)]
+        public int EntriesPerPage { get; set; }
+        [JsonProperty("Page", NullValueHandling = NullValueHandling.Ignore)]
+        public int Page { get; set; }
+        [JsonProperty("Filters", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, object> Filters { get; set; }
+        [JsonProperty("Api", NullValueHandling = NullValueHandling.Ignore)]
+        public string Api { get; set; }
+        [JsonProperty("UpdatedType", NullValueHandling = NullValueHandling.Ignore)]
+        public string UpdatedType { get; set; }
+        [JsonProperty("LastUpdated", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime LastUpdated { get; set; }
+
         
     }
 }

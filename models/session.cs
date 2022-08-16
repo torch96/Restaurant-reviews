@@ -1,8 +1,8 @@
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Restaurant.Models
+namespace RestaurantReview.Models
 {
-    public class session
+    public class Session
     {
         [BsonElement("user_id")]
         public string UserId { get; set; }

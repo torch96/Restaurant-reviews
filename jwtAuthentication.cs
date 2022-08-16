@@ -2,9 +2,9 @@ using System;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Restaurant.Models;
+using RestaurantReview.Models;
 
-namespace Restaurant
+namespace RestaurantReview
 {
     public class JwtAuthentication
     {

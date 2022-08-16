@@ -5,24 +5,24 @@ using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
-using Restaurant.Models;
-using Restaurant.Models.Projections;
-using Restaurant.Models.Responses;
+using RestaurantReview.Models;
+using RestaurantReview.Models.Projections;
+using RestaurantReview.Models.Responses;
 
 
-namespace Restaurant.Repositories
+namespace RestaurantReview.Repositories
 {
     public class ReviewRepository
     {
         private readonly IMongoCollection<Review> _reviewsCollection;
-        private readonly IMongoCollection<User> _restaurantsRepository;
+        private readonly  RestaurantsRepository _restaurantsRepository;
 
         public ReviewRepository(IMongoClient mongoClient)
         {
             var camelCaseConvention = new ConventionPack {new CamelCaseElementNameConvention()};
             ConventionRegistry.Register("CamelCase", camelCaseConvention, type => true);
             _reviewsCollection = mongoClient.GetDatabase("sample_restuarants").GetCollection<Review>("reviews");
-            _restaurantsRepository = mongoClient.GetDatabase("sample_restaurants").GetCollection<User>("users");
+            _restaurantsRepository = new RestaurantsRepository(mongoClient);
         }
 
         public async Task<Restaurant> AddReviewAsync(User user, ObjectId restaurantId, string review,
@@ -39,12 +39,13 @@ namespace Restaurant.Repositories
                     RestaurantId = restaurantId
                 };
                 await _reviewsCollection.InsertOneAsync(newReview);
-                return await _restaurantsRepository.Find(Builders<User>.Filter.Eq(u => u.Id, restaurantId)).FirstOrDefaultAsync(cancellationToken);
+                return await _restaurantsRepository.GetRestaurantAsync(restaurantId.ToString(), cancellationToken);
             }
-            catch
+            catch (Exception ex)
             {
                 return null;
             }
+           
         }
 
         public async Task<UpdateResult> UpdateReviewAsync(ObjectId restaurantId, ObjectId reviewId, User user, string review,
@@ -55,7 +56,7 @@ namespace Restaurant.Repositories
                 var filter = Builders<Review>.Filter.Eq(r => r.Id, reviewId);
                 var update = Builders<Review>.Update
                     .Set(r => r.Text, review);
-                return await _reviewsCollection.UpdateOneAsync(filter, update, cancellationToken);
+                return await _reviewsCollection.UpdateOneAsync(filter, update);
             }
             catch
             {
@@ -63,7 +64,7 @@ namespace Restaurant.Repositories
             }
         }
 
-        public async Task<DeleteResult> DeleteReviewAsync(ObjectId restaurantId, ObjectId reviewId, CancellationToken cancellationToken = default)
+        public async Task<DeleteResult> DeleteReviewAsync(ObjectId restaurantId, ObjectId reviewId, User user, CancellationToken cancellationToken = default)
         {
             try
             {

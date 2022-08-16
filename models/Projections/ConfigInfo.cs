@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace Restaurant.Models.Projections
+namespace RestaurantReview.Models.Projections
 {
     public class ConfigInfo
     {
