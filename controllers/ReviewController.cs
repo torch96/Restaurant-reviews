@@ -26,7 +26,7 @@ namespace RestaurantReview.Controllers
             _jwtAuthentication = jwtAuthentication ?? throw new ArgumentNullException(nameof(jwtAuthentication));
         }
 
-        [HttpPost("/api/v1/movies/review")]
+        [HttpPost("/api/v1/restaurants/review")]
         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> AddReview([FromBody] RestaurantReviewInput input)
         {
@@ -40,7 +40,7 @@ namespace RestaurantReview.Controllers
                 : BadRequest(new ReviewResponse());
         }
 
-        [HttpPut("/api/v1/movies/review")]
+        [HttpPut("/api/v1/restaurants/review")]
         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> UpdateReviewAsync([FromBody] RestaurantReviewInput input)
         {
@@ -55,7 +55,7 @@ namespace RestaurantReview.Controllers
                 : BadRequest(new ReviewResponse());
         }
 
-        [HttpDelete("/api/v1/movies/review")]
+        [HttpDelete("/api/v1/restaurants/review")]
         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> DeleteReviewAsync([FromBody] RestaurantReviewInput input)
         {

@@ -8,6 +8,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Hosting;
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews();
+
+var app = builder.Build();
 
 namespace RestaurantReview
 {
@@ -27,7 +32,7 @@ namespace RestaurantReview
             services.AddMvcCore().AddAuthorization().AddNewtonsoftJson();
 
             // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build/src"; });
 
             // Allow some synchronous
             services.Configure<IISServerOptions>(options =>
@@ -68,7 +73,10 @@ namespace RestaurantReview
             });
 
 
-            app.UseSpa(spa => { spa.Options.SourcePath = "ClientApp/build"; });
+            app.UseSpa(spa => {
+                spa.Options.SourcePath = "ClientApp/build";
+               
+             });
         }
     }
 

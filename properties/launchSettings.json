@@ -6,13 +6,13 @@
   },
 
   "profiles": {
-    "restaurant": {
+    "Restaurant review": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:5000",
+      "applicationUrl": "https://localhost:5000/",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy"
+        "ASPNETCORE_ENVIRONMENT": "Development"
+       
       }
     }
     
