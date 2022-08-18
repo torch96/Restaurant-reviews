@@ -4,15 +4,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Hosting;
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllersWithViews();
-
-var app = builder.Build();
 
 namespace RestaurantReview
 {
@@ -21,7 +17,7 @@ namespace RestaurantReview
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-        }
+        } 
 
         public IConfiguration Configuration { get; }
 
@@ -32,8 +28,11 @@ namespace RestaurantReview
             services.AddMvcCore().AddAuthorization().AddNewtonsoftJson();
 
             // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build/src"; });
-
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
+          /*  services.AddMvc(options =>
+            {
+                options.EnableEndpointRouting = false;
+            });*/
             // Allow some synchronous
             services.Configure<IISServerOptions>(options =>
             {
@@ -72,10 +71,15 @@ namespace RestaurantReview
                 endpoints.MapControllers();
             });
 
-
+              /* app.UseSpaStaticFiles(new StaticFileOptions() { 
+                RequestPath = "/app"
+            });*/
             app.UseSpa(spa => {
                 spa.Options.SourcePath = "ClientApp/build";
                
+
+                spa.UseReactDevelopmentServer(npmScript: "start");
+
              });
         }
     }

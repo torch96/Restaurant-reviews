@@ -1,17 +1,26 @@
 import http from "../http-common";
 const URL = "http://localhost:5000/api/v1";
 class RestaurantDataService {
-  getAll(page = 0) {
+  async getAll(page = 0) {
+    /*return await fetch(URL + '/reviews', {
+      method: 'get',
+      mode: "cors",
+      
+      body: JSON.stringify({
+       name: data.name,
+   
+      }),
+    })*/
     return http.get(`restaurants?page=${page}`);
   }
 
-  get(id) {
+  async get(id) {
     
     return http.get(`/id/${id}`);
   }
 
-  find(query, by = "title", page = 0) {
-    return http.get(`restaurants?${by}=${query}&page=${page}`);
+  async find(query, by = "name", page = 0) {
+    return http.get(`api/v1/restaurants/search`);
   } 
 
   async createReview(data) {

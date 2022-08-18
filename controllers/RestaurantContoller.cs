@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using RestaurantReview.Models;
 using RestaurantReview.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using RestaurantReview.Models.Responses;
@@ -29,9 +31,9 @@ namespace RestaurantReview.Controllers
             return Ok(new RestaurantResponse(matchedRestaurant));
         }
 
+        //[HttpGet("api/v1/restaurants/")]
         [HttpGet("api/v1/restaurants/")]
-        [HttpGet("api/v1/restaurants/search")]
-        public async Task<ActionResult> GetRestaurantsAsync(int limit = 20, [FromQuery(Name = "page")] int page = 0,
+        public async Task<ActionResult> GetRestaurantsAsync(int limit = 10, [FromQuery(Name = "page")] int page = 0,
             string sort = "name", int sortDirection = -1,
             CancellationToken cancellationToken = default)
         {
@@ -41,13 +43,42 @@ namespace RestaurantReview.Controllers
             return Ok(new RestaurantResponse(restaurants, restaurantCount, page, null));
         }
 
-        [HttpGet("api/v1/restaurants/")]
-        public async Task<ActionResult> GetRestaurantsByTextAsync(CancellationToken cancellationToken = default, int page = 0,   params string[] keywords)
+        [HttpGet("api/v1/restaurants/search")]
+        public async Task<ActionResult> GetRestaurantsByTextAsync(CancellationToken cancellationToken = default, int page = 0,  [RequiredFromQuery] params string[] keywords)
         {
             var restaurants = await _restaurantRepository.GetRestaurantsByTextAsync( cancellationToken, page, keywords);
             var restaurantCount = page == 0 ? await _restaurantRepository.GetRestaurantsCountAsync() : -1;
             return Ok(new RestaurantResponse(restaurants, restaurantCount, page, null));
         }
 
+    }
+
+    public class RequiredFromQueryString : IActionConstraint
+    {
+        private readonly string _parameter;
+
+        public RequiredFromQueryString(string parameter)
+        {
+            _parameter = parameter;
+        }
+
+        public int Order => 999;
+
+        public bool Accept(ActionConstraintContext context)
+        {
+            if (!context.RouteContext.HttpContext.Request.Query.ContainsKey(_parameter)) return false;
+
+            return true;
+        }
+    }
+
+    public class RequiredFromQueryAttribute : FromQueryAttribute, IParameterModelConvention
+    {
+        public void Apply(ParameterModel parameter)
+        {
+            if (parameter.Action.Selectors != null && parameter.Action.Selectors.Any())
+                parameter.Action.Selectors.Last().ActionConstraints.Add(
+                    new RequiredFromQueryString(parameter.BindingInfo?.BinderModelName ?? parameter.ParameterName));
+        }
     }
 }
