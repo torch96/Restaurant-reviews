@@ -48,7 +48,11 @@ namespace RestaurantReview.Repositories
             return restaurant;*/
             return await  _restaurantsCollection.Aggregate()
                 .Match(Builders<Restaurant>.Filter.Eq(r => r.Id, restaurantId))
-                .Lookup<Restaurant, Review, Restaurant>(_reviewsCollection, r => r.Id, r => r.RestaurantId, r => r.Reviews)
+                .Lookup  (
+                _reviewsCollection, 
+                r => r.Id, 
+                c => c.RestaurantId, 
+                (Restaurant r) => r.Reviews)
                 .FirstOrDefaultAsync(cancellationToken);
         }
         /*public async Task<Restaurant> GetRestaurantAsync(string restaurantName, CancellationToken cancellationToken = default)

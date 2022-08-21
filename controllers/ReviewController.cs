@@ -12,8 +12,10 @@ using Newtonsoft.Json;
 
 namespace RestaurantReview.Controllers
 {
+    [ApiController]
     public class ReviewController : ControllerBase
     {
+
         private readonly ReviewRepository _reviewsRepository;
         private readonly IOptions<JwtAuthentication> _jwtAuthentication;
         private readonly UserRepository _userRepository;

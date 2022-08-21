@@ -3,7 +3,7 @@ import RestuarantDataService from "../services/restaurant";
 import { Link } from "react-router-dom";
 
 const Home = props => {
-  const [restuarants, setrestuarants] = useState([]);
+  const [restuarants, setRestuarants] = useState([]);
   const [searchTitle, setSearchTitle ] = useState("");
  
  

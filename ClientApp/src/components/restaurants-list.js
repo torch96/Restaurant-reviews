@@ -142,10 +142,10 @@ const RestaurantsList = props => {
               <div className="card movie border-dark ">
                 <div className="card-body">
                   <h5 className="card-title">{restaurant.name}</h5>
-                  <img src={movie.poster} className="poster mx-auto d-block" ></img>
+                  <img src="" className="poster mx-auto d-block" ></img>
                   <p className="card-text">
-                    <strong>Plot: </strong>{movie.plot}<br/>
-                    <strong>Year of release: </strong>{movie.year}<br/>
+                    <strong>Plot: </strong>{}<br/>
+                    <strong>Year of release: </strong>{}<br/>
                     <strong>Cast: </strong>{cast}<br/>
                     <strong>Genre: </strong>{genre}<br/>
                     

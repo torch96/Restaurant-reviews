@@ -22,7 +22,7 @@ const SignUp = props => {
                 console.log(e);
             }
             );
-            console.log(result.json());
+            
 		
 	}
 

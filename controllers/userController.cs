@@ -40,7 +40,7 @@ namespace RestaurantReview.Controllers
             return Ok(user);
         }
 
-        [HttpPost("/api/v1/user/signup")]
+        [HttpPost("/api/v1/user/register")]
         public async Task<ActionResult> CreateUser([FromBody] User user)
         {
             Dictionary<string, string> errors = new Dictionary<string, string>();
@@ -70,12 +70,12 @@ namespace RestaurantReview.Controllers
         }
     
 
-        [HttpPost("/api/v1/user/login")]
+        [HttpPost("/api/v1/user/signin")]
         public async Task<ActionResult> Login([FromBody] User user)
         {
             user.AuthToken = _jwtAuthentication.Value.GenerateToken(user);
             var result = await _userRepository.LoginUserAsync(user);
-            return result.User != null ? Ok(new UserResponse(result.User)) : Ok(result);
+            return  Ok(new UserResponse(result.User));
         }
 
         [HttpPost("/api/v1/user/logout")]

@@ -4,7 +4,10 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import {BrowserRouter} from "react-router-dom";
 
-
+//const process = require('process');
+  
+// Printing process.traceDeprecation property value
+//console.log(process.traceDeprecation);
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <BrowserRouter>
