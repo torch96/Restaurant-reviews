@@ -13,7 +13,7 @@ const RestaurantsList = props => {
    // retrieveGenres();
   }, []);
 
-  const onChangeSearchTitle = e => {
+  const onChangeSearchName = e => {
     const searchTitle = e.target.value;
     setSearchTitle(searchTitle);
   };
@@ -34,23 +34,7 @@ const RestaurantsList = props => {
       });
   };
 
- /* const onChangeSearchGenre = e => {
-    const searchGenres = e.target.value;
-    setSearchGenre(searchGenres);
-    
-  };
 
-  const retrieveGenres = () => {
-    RestaurantDataService.getGenres()
-      .then(response => {
-        console.log(response.data);
-        setGenres(["All Genres"].concat(response.data));
-        
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  };*/
 
   const refreshList = () => {
     retrieveRestaurants();
@@ -67,8 +51,8 @@ const RestaurantsList = props => {
       });
   };
 
-  const findByTitle = () => {
-    find(searchTitle, "title")
+  const findByName = () => {
+    find(searchTitle, "name");
   };
   
 
@@ -83,7 +67,7 @@ const RestaurantsList = props => {
   const handleKeyPress = (event) => {
     
     if(event.key === 'Enter'){
-      findByTitle();
+      findByName();
     }
   }
 
@@ -96,14 +80,14 @@ const RestaurantsList = props => {
             className="form-control"
             placeholder="Search by Title"
             value={searchTitle}
-            onChange={onChangeSearchTitle}
+            onChange={onChangeSearchName}
             onKeyPress={handleKeyPress}
           />
           <div className="input-group-append">
             <button
               className="btn btn-outline-secondary"
               type="button"
-              onClick={findByTitle}
+              onClick={findByName}
               
             >
               Search
@@ -120,23 +104,7 @@ const RestaurantsList = props => {
       <div className="row">
         {restaurants.map((restaurant) => {
           const address = `${restaurant.imdb.rating}`;
-          const genre = [""];
-          const cast = [""];
-         if(restaurant.genres != null){
-          Object.keys(restaurant.genres).forEach(key => {
-            genre.push(restaurant.genres[key] + ' ');
-           });
-          }else{
-            genre.push("N/A");
-          }
-          
-          if(restaurant.cast != null){
-            Object.keys(restaurant.cast).forEach(key => {
-              cast.push(restaurant.cast[key] + ', ');
-           });
-          }else{
-            cast.push("N/A");
-          }
+
           return (
             <div className="col-lg-4 pb-1 container-sm ">
               <div className="card movie border-dark ">
@@ -144,17 +112,14 @@ const RestaurantsList = props => {
                   <h5 className="card-title">{restaurant.name}</h5>
                   <img src="" className="poster mx-auto d-block" ></img>
                   <p className="card-text">
-                    <strong>Plot: </strong>{}<br/>
-                    <strong>Year of release: </strong>{}<br/>
-                    <strong>Cast: </strong>{cast}<br/>
-                    <strong>Genre: </strong>{genre}<br/>
-                    
-                    <strong>IMDB RAITNG: </strong>{address}
+                    <strong>Cuisine: </strong>{restaurant.cuisine}<br/>
+                    <strong>Address: </strong>{address}
                   </p>
                   <div className="row">
                   <Link to={"/restaurants/"+restaurant._id} className="btn btn-primary col-lg-5 mx-1 mb-1">
                     View Reviews
                   </Link>
+                  <a target="_blank" href={"https://www.google.com/maps/place/" + address} className="btn btn-primary col-lg-5 mx-1 mb-1">View Map</a>
                   
                   </div>
                 </div>

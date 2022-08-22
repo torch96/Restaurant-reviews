@@ -1,17 +1,15 @@
 import http from "../http-common";
-const URL = "http://localhost:5000/api/v1";
+const URL = "https://localhost:5000/api/v1/";
 class RestaurantDataService {
   async getAll(page = 0) {
-    /*return await fetch(URL + '/reviews', {
+    console.log(URL + `restaurants?page=${page}`);
+    return await fetch( URL + `restaurants`, {
       method: 'get',
       mode: "cors",
+    })
+    .then(response => response.json())
       
-      body: JSON.stringify({
-       name: data.name,
-   
-      }),
-    })*/
-    return http.get(`restaurants?page=${page}`);
+    
   }
 
   async get(id) {
@@ -20,7 +18,8 @@ class RestaurantDataService {
   }
 
   async find(query, by = "name", page = 0) {
-    return http.get(`api/v1/restaurants/search`);
+    console.log(URL + `restaurants?${by}=${query}&page=${page}`);
+    return http.get( `restaurants?${by}=${query}&page=${page}`);
   } 
 
   async createReview(data) {

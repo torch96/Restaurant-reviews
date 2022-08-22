@@ -28,7 +28,7 @@ namespace RestaurantReview.Controllers
         {
             var matchedRestaurant = await _restaurantRepository.GetRestaurantAsync(restaurantId, cancellationToken);
             if (matchedRestaurant == null) return BadRequest(new ErrorResponse("Not found"));
-            return Ok(new RestaurantResponse(matchedRestaurant));
+            return Ok(matchedRestaurant);
         }
 
         //[HttpGet("api/v1/restaurants/")]

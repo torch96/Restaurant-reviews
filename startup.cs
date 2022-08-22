@@ -29,10 +29,10 @@ namespace RestaurantReview
         {
             services.RegisterMongoDbRepositories();
             services.AddMvcCore().AddAuthorization().AddNewtonsoftJson();
-            services.AddSwaggerGen(c =>
+          /*  services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });                
-            });
+            });*/
             services.AddControllers();
 
             // In production, the React files will be served from this directory
@@ -69,15 +69,15 @@ namespace RestaurantReview
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseRouting();
-            app.UseSwagger();
+           // app.UseSwagger();
             app.UseAuthorization();
             app.UseAuthentication();
             app.UseHttpsRedirection();
-            app.UseSwaggerUI(c =>
+           /* app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 c.RoutePrefix = string.Empty;
-            });
+            });*/
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

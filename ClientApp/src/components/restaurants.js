@@ -4,25 +4,19 @@ import loginDataService from "../services/loginAuth";
 import { Link } from "react-router-dom";
 
 const Movie = props => {
-  const initialMovieState = {
+  const initialRestaurantState = {
     id: null,
-    title: "",
-    poster: "",
-    fullplot: "",
-    imdb: {},
-    genres: [],
-    cast:[],
-    directors:[],
-    writers:[],
-    num_mflix_comments: 0,
-    comments: []
+    name: "",
+    address: {},
+    cuisine: "",
+    reviews: []
   };
   const initialUserState = {
     name: "",
     email: "",
     password: "",
   };
-  const [movie, setMovie] = useState(initialMovieState);
+  const [movie, setMovie] = useState(initialRestaurantState);
   const [user, setUser] = useState(initialUserState);
   const getMovie = id => {
     MovieDataService.get(id)
@@ -80,7 +74,7 @@ const Movie = props => {
             </div>
           </div>
       
-          <Link to={"/movies/" + props.match.params.id + "/review"} className="btn btn-primary">
+          <Link to={"/restaurants/" + props.match.params.id + "/review"} className="btn btn-primary">
             Add Review
           </Link>
           
