@@ -25,13 +25,16 @@ const RestaurantsList = props => {
   const retrieveRestaurants = () => {
     RestaurantDataService.getAll()
       .then(response => {
-        
-        setRestaurants(response.data.restaurants);
+        console.log(response);
+        console.log(localStorage.getItem("jwt"));
+        console.log(response.data.Restaurants);
+        setRestaurants(response.data.Restaurants);
         
       })
       .catch(e => {
         console.log(e);
       });
+      
   };
 
 
@@ -43,8 +46,8 @@ const RestaurantsList = props => {
   const find = (query, by) => {
     RestaurantDataService.find(query, by)
       .then(response => {
-        console.log(response.data);
-        setRestaurants(response.data.restaurants);
+        console.log(response.data.Restaurants);
+        setRestaurants(response.data.Restaurants);
       })
       .catch(e => {
         console.log(e);
@@ -103,7 +106,7 @@ const RestaurantsList = props => {
       </div>
       <div className="row">
         {restaurants.map((restaurant) => {
-          const address = `${restaurant.imdb.rating}`;
+         const address = `${restaurant.address.building} ${restaurant.address.street}`;
 
           return (
             <div className="col-lg-4 pb-1 container-sm ">
@@ -114,12 +117,13 @@ const RestaurantsList = props => {
                   <p className="card-text">
                     <strong>Cuisine: </strong>{restaurant.cuisine}<br/>
                     <strong>Address: </strong>{address}
+                    <strong>zipcode: </strong>{restaurant.address.zipcode}<br/>
                   </p>
                   <div className="row">
                   <Link to={"/restaurants/"+restaurant._id} className="btn btn-primary col-lg-5 mx-1 mb-1">
                     View Reviews
                   </Link>
-                  <a target="_blank" href={"https://www.google.com/maps/place/" + address} className="btn btn-primary col-lg-5 mx-1 mb-1">View Map</a>
+                  <a target="_blank" href={"https://www.google.com/maps/place/" + address+ ","+restaurant.address.zipcode} className="btn btn-primary col-lg-5 mx-1 mb-1">View Map</a>
                   
                   </div>
                 </div>

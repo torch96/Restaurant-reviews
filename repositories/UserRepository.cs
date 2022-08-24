@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using RestaurantReview.Models;
-using RestaurantReview.Models.Projections;
 using RestaurantReview.Models.Responses;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
@@ -20,57 +19,69 @@ namespace RestaurantReview.Repositories
         {
             var camelCaseConvention = new ConventionPack {new CamelCaseElementNameConvention()};
             ConventionRegistry.Register("CamelCase", camelCaseConvention, type => true);
-            _usersCollection = mongoClient.GetDatabase("sample_restuarants").GetCollection<User>("users");
+            _usersCollection = mongoClient.GetDatabase("sample_restaurants").GetCollection<User>("users");
             _sessionsCollection = mongoClient.GetDatabase("sample_restaurants").GetCollection<Session>("sessions");
         }
 
         public async Task<User> GetUserAsync(string email, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<User>.Filter.Eq(u => u.Email, email);
-            return await _usersCollection.Find(filter).FirstOrDefaultAsync(cancellationToken);
+            var user = await _usersCollection.Find(u => u.Email == email).FirstOrDefaultAsync(cancellationToken);
+            Console.WriteLine($"USER = {user.Name}");
+            return user;
+            
+         
         }
 
         public async Task<UserResponse> CreateUserAsync(string name, string password, string email, CancellationToken cancellationToken = default)
         {
             try{
-                var user = new User();
+                
 
-             user = new User
+             var user = new User
              {
                 Email = email,
-                HashedPassword = PasswordManager.Hash(password),
+                Password = PasswordManager.Hash(password),
                 Name = name,
             };
+          
                 await _usersCollection.InsertOneAsync(user);
 
-                var newUser = await GetUserAsync(user.Email, cancellationToken);
+                var newUser = await GetUserAsync(email, cancellationToken);
+
                 return new UserResponse(newUser);
             }
             catch(Exception ex)
-            {
+            {   
+                Console.WriteLine( $"NEWUSERd = {ex.Message}");  
                 return new UserResponse(false, ex.Message);
             }
         }
 
-        public async Task<UserResponse> LoginUserAsync(User user, CancellationToken cancellationToken = default)
+        public async Task<UserResponse> LoginUserAsync(string email, string password, string authToken, CancellationToken cancellationToken = default)
         {
             try
-            {
-                var userFromDB = await GetUserAsync(user.Email, cancellationToken);
+            {   
+
+                var user = new User{
+                    Email = email,
+                    Password =password,
+                    AuthToken = authToken
+                };
+                
+                var userFromDB = await GetUserAsync(email, cancellationToken);
                 if (userFromDB == null)
                 {
                     return new UserResponse(false,"User not found");
                 }
-                if (user.HashedPassword != userFromDB.HashedPassword)
-                {
-                    return new UserResponse(false,"Invalid password");
-                }
+
+  
+              
                 
-                if(!PasswordManager.Verify(user.Password,userFromDB.HashedPassword))
+                if(!PasswordManager.Verify(password,userFromDB.Password))
                 {
-                    return new UserResponse(false,"Invalid password");
+                    return new UserResponse(false,"Invalid password hash");
                 }
-                
+
 
                 await _sessionsCollection.UpdateOneAsync(new BsonDocument("user_id", user.Email),
                     Builders<Session>.Update.Set(s => s.UserId, user.Email)
@@ -79,6 +90,7 @@ namespace RestaurantReview.Repositories
                     cancellationToken);
 
                 userFromDB.AuthToken = user.AuthToken;
+                
                 return new UserResponse(userFromDB);
                 
             }

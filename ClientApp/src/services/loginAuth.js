@@ -1,6 +1,6 @@
 //import Axios from "../Axios-common";
 import {useHistory} from "react-router-dom";
-const URL = "http://localhost:5000/api/v1";
+const URL = "https://localhost:5000/api/v1";
 
 
 class loginDataService {
@@ -17,9 +17,11 @@ class loginDataService {
 				password,
 			}),
 		})
-    const data = await response.json();
-   localStorage.setItem("jwt", data.token);   
-   localStorage.setItem("name", data.info.name);
+    console.log(response);
+ 
+    
+   localStorage.setItem("jwt", response.auth_token);   
+  
     return response;
   
   }
@@ -35,8 +37,11 @@ class loginDataService {
         password,
       }),
     })
-    const data = await response.json();
-    localStorage.setItem("jwt", data.token);   
+    console.log(response.json());
+    console.log("tets" + response.auth_token);
+    console.log(response);
+   
+    localStorage.setItem("jwt", response.info.auth_token);   
     
     
     return response;

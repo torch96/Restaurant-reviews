@@ -26,7 +26,7 @@ namespace RestaurantReview.Models
 
     }
 
-    public class UserLogin{
+    public class Login{
         [Required]
         [EmailAddress]
         private string Email { get; set; }

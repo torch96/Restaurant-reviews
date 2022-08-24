@@ -21,7 +21,7 @@ namespace RestaurantReview.Repositories
         {
             var camelCaseConvention = new ConventionPack {new CamelCaseElementNameConvention()};
             ConventionRegistry.Register("CamelCase", camelCaseConvention, type => true);
-            _reviewsCollection = mongoClient.GetDatabase("sample_restuarants").GetCollection<Review>("reviews");
+            _reviewsCollection = mongoClient.GetDatabase("sample_restaurants").GetCollection<Review>("reviews");
             _restaurantsRepository = new RestaurantsRepository(mongoClient);
         }
 

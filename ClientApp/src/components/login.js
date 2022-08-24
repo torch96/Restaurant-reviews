@@ -15,16 +15,16 @@ const Login = props => {
       email,
       password)
       .then(response => {
-        
-        
-        history.push("/restaurants" );
+
+        console.log(response.data);        
+        history.push("/" );
         
       }
       ).catch(e => {
         console.log(e);
       }
       );
-      
+      console.log(login);
       
 	}
 

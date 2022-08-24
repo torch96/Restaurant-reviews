@@ -11,7 +11,7 @@ namespace RestaurantReview.Models.Responses
 {
     public class RestaurantResponse
     {
-        private static readonly int  RESTAURANTS_PER_PAGE = 10;
+        private static readonly int  RESTAURANTS_PER_PAGE = 12;
         
         public RestaurantResponse(Restaurant restaurant)
         {
@@ -19,7 +19,7 @@ namespace RestaurantReview.Models.Responses
            {
                Restaurant = restaurant;
                Api = "csharp";
-               UpdatedType = (restaurant.LastUpdated is DateTime) ? "Date" : "Other";
+              
            }
         }
         public RestaurantResponse(IReadOnlyList<Restaurant> restaurants, long totalRestaurantCount, int page, Dictionary<string, object> filters)
@@ -58,8 +58,7 @@ namespace RestaurantReview.Models.Responses
         public string Api { get; set; }
         [JsonProperty("UpdatedType", NullValueHandling = NullValueHandling.Ignore)]
         public string UpdatedType { get; set; }
-        [JsonProperty("LastUpdated", NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime LastUpdated { get; set; }
+       
 
         
     }

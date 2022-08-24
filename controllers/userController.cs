@@ -40,45 +40,47 @@ namespace RestaurantReview.Controllers
             return Ok(user);
         }
 
-        [HttpPost("/api/v1/user/register")]
+        [HttpPost("/api/v1/users/register")]
         public async Task<ActionResult> CreateUser([FromBody] User user)
         {
-            Dictionary<string, string> errors = new Dictionary<string, string>();
-            if (user.Name.Length < 3)
-            {
-                errors.Add("name", "Name must be at least 3 characters");
-            }
-            if (user.Email.Length < 3)
-            {
-                errors.Add("email", "Email must be at least 3 characters");
-            }
-            if (user.Password.Length < 3)
-            {
-                errors.Add("password", "Password must be at least 3 characters");
-            }
-            if (errors.Count > 0)
-            {
-                return BadRequest(new {error = errors});
-            }
+
             var response = await _userRepository.CreateUserAsync(user.Name, user.Password,  user.Email);
-           if( response.User != null) response.User.AuthToken = _jwtAuthentication.Value.GenerateToken(response.User);
+
+            if( response.User != null) response.User.AuthToken = _jwtAuthentication.Value.GenerateToken(response.User);
             if(!response.Success)
             {
                 return BadRequest(new { error = response.ErrorMessage });
             }
-            return Ok(user);
+            return Ok(response.User);
         }
     
 
-        [HttpPost("/api/v1/user/signin")]
-        public async Task<ActionResult> Login([FromBody] User user)
+        [HttpPost("/api/v1/users/signin")]
+        public async Task<ActionResult> Login([ FromBody] User user)
         {
-            user.AuthToken = _jwtAuthentication.Value.GenerateToken(user);
-            var result = await _userRepository.LoginUserAsync(user);
-            return  Ok(new UserResponse(result.User));
+
+            var theUser = new User{
+                Email = user.Email,
+                Password = user.Password,
+                AuthToken = _jwtAuthentication.Value.GenerateToken(user)
+            };
+          
+           
+            var result = await _userRepository.LoginUserAsync(theUser.Email, theUser.Password, theUser.AuthToken);
+
+           Console.WriteLine(result.User.AuthToken);
+           Console.WriteLine(result.User.Email);
+              Console.WriteLine(result.User.Password);
+           
+            if(result.Success)
+            {
+                return Ok(result.User);
+            }
+            return BadRequest(new { error = result.ErrorMessage });
+            
         }
 
-        [HttpPost("/api/v1/user/logout")]
+        [HttpPost("/api/v1/users/logout")]
         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> Logout()
         {

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using RestaurantReview.Models.Responses;
+
 namespace RestaurantReview.Controllers
 {
 
@@ -21,7 +22,7 @@ namespace RestaurantReview.Controllers
         {
             _restaurantRepository = restaurantRepository;
         }
-
+        //[EnableCors("AllowAll")]
         [HttpGet("api/v1/restaurants/getrestaurant/")]
         [HttpGet("api/v1/restaurants/id/{restaurantId}")]
         public async Task<ActionResult> GetRestaurantAsync(string restaurantId, CancellationToken cancellationToken = default)
@@ -33,7 +34,7 @@ namespace RestaurantReview.Controllers
 
         //[HttpGet("api/v1/restaurants/")]
         [HttpGet("api/v1/restaurants/")]
-        public async Task<ActionResult> GetRestaurantsAsync(int limit = 10, [FromQuery(Name = "page")] int page = 0,
+        public async Task<ActionResult> GetRestaurantsAsync(int limit = 12, [FromQuery(Name = "page")] int page = 0,
             string sort = "name", int sortDirection = -1,
             CancellationToken cancellationToken = default)
         {
@@ -43,10 +44,10 @@ namespace RestaurantReview.Controllers
             return Ok(new RestaurantResponse(restaurants, restaurantCount, page, null));
         }
 
-        [HttpGet("api/v1/restaurants/search")]
-        public async Task<ActionResult> GetRestaurantsByTextAsync(CancellationToken cancellationToken = default, int page = 0,  [RequiredFromQuery] params string[] keywords)
+        [HttpGet("api/v1/restaurants/search/{query}")]
+        public async Task<ActionResult> GetRestaurantsByTextAsync(CancellationToken cancellationToken = default, int page = 0,   params string[] query)
         {
-            var restaurants = await _restaurantRepository.GetRestaurantsByTextAsync( cancellationToken, page, keywords);
+            var restaurants = await _restaurantRepository.GetRestaurantsByTextAsync( cancellationToken, page, query);
             var restaurantCount = page == 0 ? await _restaurantRepository.GetRestaurantsCountAsync() : -1;
             return Ok(new RestaurantResponse(restaurants, restaurantCount, page, null));
         }

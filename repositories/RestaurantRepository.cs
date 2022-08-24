@@ -13,7 +13,7 @@ namespace RestaurantReview.Repositories
 {
     public class RestaurantsRepository
     {
-        private const int RestaurantsPerPage = 10;
+        private const int RestaurantsPerPage = 12;
         private readonly IMongoCollection<Restaurant> _restaurantsCollection;
         private readonly IMongoCollection<Review> _reviewsCollection;
         private readonly IMongoClient _mongoClient;
@@ -34,7 +34,7 @@ namespace RestaurantReview.Repositories
            var skip = page * perPage;
            var limit = perPage;
             var restaurants = await _restaurantsCollection.Find(Builders<Restaurant>.Filter.Empty)  
-                .Sort(Builders<Restaurant>.Sort.Ascending(r => r.name))
+            
                 .Skip(skip)
                 .Limit(limit)
                 .ToListAsync(cancellationToken);
@@ -47,7 +47,7 @@ namespace RestaurantReview.Repositories
                 .FirstOrDefaultAsync(cancellationToken);
             return restaurant;*/
             return await  _restaurantsCollection.Aggregate()
-                .Match(Builders<Restaurant>.Filter.Eq(r => r.Id, restaurantId))
+                .Match(Builders<Restaurant>.Filter.Eq(x => x.Id, restaurantId))
                 .Lookup  (
                 _reviewsCollection, 
                 r => r.Id, 
@@ -55,13 +55,7 @@ namespace RestaurantReview.Repositories
                 (Restaurant r) => r.Reviews)
                 .FirstOrDefaultAsync(cancellationToken);
         }
-        /*public async Task<Restaurant> GetRestaurantAsync(string restaurantName, CancellationToken cancellationToken = default)
-        {
-            var restaurant = await _restaurantsCollection.Find(Builders<Restaurant>.Filter.Eq(r => r.name, restaurantName))
-                .FirstOrDefaultAsync(cancellationToken);
-            return restaurant;
-        }*/
-        
+       
       
         
         public async Task<long> GetRestaurantsCountAsync(){
@@ -70,13 +64,13 @@ namespace RestaurantReview.Repositories
 
         public async Task<IReadOnlyList<Restaurant>> GetRestaurantsByTextAsync(CancellationToken cancellationToken = default,  int page = 0,  params string[] keywords)
         {
-            var x = await _restaurantsCollection
+             return await _restaurantsCollection
                 .Find(Builders<Restaurant>.Filter.Text(string.Join(",", keywords)))
-                 .Sort(Builders<Restaurant>.Sort.Ascending(r => r.name))
+                
                 .Limit(RestaurantsPerPage)
                 .Skip(page * RestaurantsPerPage)
                 .ToListAsync(cancellationToken);
-           return x;
+            
         }
     }
 }

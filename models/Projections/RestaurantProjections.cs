@@ -11,8 +11,7 @@ namespace RestaurantReview.Models.Projections
         [BsonElement("_id")]
         public ObjectId Id { get; set; }
 
-        [BsonElement("name")]
-        public string name { get; set; }
+       
         }
     
 }

@@ -1,19 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-     <TargetFramework>net6</TargetFramework>
+     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="microsoft.aspnet.webapi" Version="5.2.9" />
+    <PackageReference Include="microsoft.aspnet.webapi.cors" Version="5.2.9" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.authentication" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.authentication.jwtbearer" Version="6.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.mvc.newtonsoftjson" Version="6.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Spaproxy" Version="6.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.28" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.extensions" Version="6.0.8" />
     <PackageReference Include="mongodb.bson" Version="2.17.1" />
     <PackageReference Include="mongodb.driver" Version="2.17.1" />
@@ -39,11 +39,11 @@
   </Target>
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
-  <!--   - As part of publishing, ensure the JS resources are freshly built in production mode -
+  <!--   - As part of publishing, ensure the JS resources are freshly built in production mode - -->
    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
 
-    Include the newly-built files in the publish output -->
+ 
     <ItemGroup>
       <DistFiles Include="$(SpaRoot)build\**" />
       <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">

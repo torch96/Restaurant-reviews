@@ -25,10 +25,11 @@ namespace RestaurantReview.Models
         }
         
         public Address address { get; set; }
-        public List<Grades> grades { get; set; }
+        
 
         public string borough { get; set; }
         public string cuisine { get; set; }
+        public List<Grades> grades { get; set; }
         public string name { get; set; }
 
         public List<Review> Reviews
@@ -39,7 +40,7 @@ namespace RestaurantReview.Models
 
         public string restaurant_id { get; set; }
         
-        public DateTime LastUpdated { get; set; }
+        
     }
 
     public class Address

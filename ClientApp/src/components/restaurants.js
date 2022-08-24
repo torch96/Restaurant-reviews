@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from "react";
-import MovieDataService from "../services/restaurant";
+import RestaurantDataService from "../services/restaurant";
 import loginDataService from "../services/loginAuth";
 import { Link } from "react-router-dom";
 
-const Movie = props => {
+const Restaurant = props => {
   const initialRestaurantState = {
     id: null,
     name: "",
     address: {},
     cuisine: "",
-    reviews: []
+    reviews: [""]
   };
   const initialUserState = {
     name: "",
     email: "",
     password: "",
   };
-  const [movie, setMovie] = useState(initialRestaurantState);
+  const [restaurant, setRestaurant] = useState(initialRestaurantState);
   const [user, setUser] = useState(initialUserState);
-  const getMovie = id => {
-    MovieDataService.get(id)
+  const getRestaurant = id => {
+    RestaurantDataService.get(id)
       .then(response => {
-        setMovie(response.data);
+        console.log(response.data);
+        setRestaurant(response.data);
        
       })
       .catch(e => {
@@ -36,16 +37,16 @@ const Movie = props => {
   } 
   
   useEffect(() => {
-    getMovie(props.match.params.id);
+    getRestaurant(props.match.params.id);
     getUser();
     
   }, [props.match.params.id]);
 
-  const deleteReview = (commentsId, index) => {
-    MovieDataService.deleteReview(commentsId, loginDataService.getJwt())
+  const deleteReview = (reviewsId, index) => {
+    RestaurantDataService.deleteReview(reviewsId, loginDataService.getJwt())
       .then(response => {
-        setMovie((prevState) => {
-          prevState.comments.splice(index, 1)
+        setRestaurant((prevState) => {
+          prevState.reviews.splice(index, 1)
           return({
             ...prevState
           })
@@ -58,19 +59,16 @@ const Movie = props => {
 
   return (
     <div>
-      {movie ? (   
+      {restaurant ? (   
         <div>
           <div className="movieInfo card w-50 border-dark mx-auto d-block">
-            <h3>{movie.title}</h3>
-            <img src={movie.poster} className="posterBig mx-auto d-block" ></img>
+            <h3>{restaurant.title}</h3>
+            <img src={restaurant.poster} className="posterBig mx-auto d-block" ></img>
             <div className="card  card-body border-dark ">
-              <p><strong>Plot: </strong>{movie.fullplot}<br/></p>
-
-              <p><strong>Directors: </strong>{movie.directors.join(", ")}</p>
-
-              <p><strong>Cast: </strong>{movie.cast.join(", ")}</p>
-              
-              <p><strong>Genres: </strong>{movie.genres.join(", ")}</p>
+            <p>
+            <strong>Cuisine: </strong>{restaurant.cuisine}<br/>
+            <strong>Address: </strong>{restaurant.address.building} {restaurant.address.street}, {restaurant.address.zipcode}
+          </p>
             </div>
           </div>
       
@@ -81,25 +79,25 @@ const Movie = props => {
           <h4> Reviews </h4>
          
           <div className="row">
-            {movie.comments.length 
+            {restaurant.reviews.length 
             > 0 ? (
-             movie.comments.map((comment, index) => {
+             restaurant.reviews.map((review, index) => {
                return (
                  <div className="col-lg-4 pb-1" key={index}>
                    <div className="card">
                      <div className="card-body">
                        <p className="card-text">
-                         {comment.text}<br/>
-                         <strong>User: </strong>{comment.name}<br/>
-                         <strong>Date: </strong>{comment.date}
+                         {review.text}<br/>
+                         <strong>User: </strong>{review.name}<br/>
+                         <strong>Date: </strong>{review.date}
                        </p>
-                       {user.email === comment.email &&
+                       {user.email === review.email &&
                           <div className="row">
-                            <a onClick={() => deleteReview(comment._id, index)} className="btn btn-primary col-lg-5 mx-1 mb-1">Delete</a>
+                            <a onClick={() => deleteReview(review._id, index)} className="btn btn-primary col-lg-5 mx-1 mb-1">Delete</a>
                             <Link to={{
-                              pathname: "/movies/" + props.match.params.id + "/review",
+                              pathname: "/restaurants/" + props.match.params.id + "/review",
                               state: {
-                                currentReview: comment
+                                currentReview: review
                               }
                             }} className="btn btn-primary col-lg-5 mx-1 mb-1">Edit</Link>
                           </div>                   
@@ -119,11 +117,11 @@ const Movie = props => {
         ) : (
         <div>
           <br />
-          <p>No movie selected.</p>
+          <p>No restaurant selected.</p>
         </div>
       )}
     </div>
   );
 };
 
-export default Movie;
+export default Restaurant;

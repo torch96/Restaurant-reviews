@@ -13,14 +13,16 @@ using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using Microsoft.OpenApi.Models;
+
+
 namespace RestaurantReview
 {
-    public class Startup
+     public class Startup
     {
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-        } 
+        }
 
         public IConfiguration Configuration { get; }
 
@@ -29,18 +31,10 @@ namespace RestaurantReview
         {
             services.RegisterMongoDbRepositories();
             services.AddMvcCore().AddAuthorization().AddNewtonsoftJson();
-          /*  services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });                
-            });*/
-            services.AddControllers();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
-          /*  services.AddMvc(options =>
-            {
-                options.EnableEndpointRouting = false;
-            });*/
+
             // Allow some synchronous
             services.Configure<IISServerOptions>(options =>
             {
@@ -69,30 +63,18 @@ namespace RestaurantReview
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseRouting();
-           // app.UseSwagger();
+
             app.UseAuthorization();
             app.UseAuthentication();
             app.UseHttpsRedirection();
-           /* app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                c.RoutePrefix = string.Empty;
-            });*/
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
 
-              /* app.UseSpaStaticFiles(new StaticFileOptions() { 
-                RequestPath = "/app"
-            });*/
-            app.UseSpa(spa => {
-                spa.Options.SourcePath = "ClientApp";
-               
 
-                spa.UseReactDevelopmentServer(npmScript: "start");
-
-             });
+            app.UseSpa(spa => { spa.Options.SourcePath = "ClientApp/build"; });
         }
     }
 
