@@ -18,9 +18,9 @@ class loginDataService {
 			}),
 		})
     console.log(response);
- 
+    const data = await response.json();
     
-   localStorage.setItem("jwt", response.auth_token);   
+   localStorage.setItem("jwt", data.auth_token);   
   
     return response;
   
@@ -37,11 +37,9 @@ class loginDataService {
         password,
       }),
     })
-    console.log(response.json());
-    console.log("tets" + response.auth_token);
-    console.log(response);
+    const data = await response.json();
    
-    localStorage.setItem("jwt", response.info.auth_token);   
+    localStorage.setItem("jwt", data.auth_token);   
     
     
     return response;
@@ -86,7 +84,7 @@ class loginDataService {
      
       if(this.getJwt() !== null) {
         const decoded = this.parseJwt();
-        
+        console.log(decoded);
         return decoded;
       }else {
         return {email: "", name: ""};

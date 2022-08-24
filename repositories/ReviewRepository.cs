@@ -38,7 +38,8 @@ namespace RestaurantReview.Repositories
                     Email = user.Email,
                     RestaurantId = restaurantId
                 };
-                await _reviewsCollection.InsertOneAsync(newReview);
+             var x =  _reviewsCollection.InsertOneAsync(newReview);
+             Console.WriteLine("insert review " + x);
                 return await _restaurantsRepository.GetRestaurantAsync(restaurantId.ToString(), cancellationToken);
             }
             catch (Exception ex)
@@ -48,7 +49,7 @@ namespace RestaurantReview.Repositories
            
         }
 
-        public async Task<UpdateResult> UpdateReviewAsync(ObjectId restaurantId, ObjectId reviewId, User user, string review,
+        public async Task<UpdateResult> UpdateReviewAsync( ObjectId reviewId, User user, string review,
             CancellationToken cancellationToken = default)
         {
             try
@@ -64,7 +65,7 @@ namespace RestaurantReview.Repositories
             }
         }
 
-        public async Task<DeleteResult> DeleteReviewAsync(ObjectId restaurantId, ObjectId reviewId, User user, CancellationToken cancellationToken = default)
+        public async Task<DeleteResult> DeleteReviewAsync( ObjectId reviewId, User user, CancellationToken cancellationToken = default)
         {
             try
             {

@@ -26,7 +26,7 @@ const RestaurantsList = props => {
     RestaurantDataService.getAll()
       .then(response => {
         console.log(response);
-        console.log(localStorage.getItem("jwt"));
+
         console.log(response.data.Restaurants);
         setRestaurants(response.data.Restaurants);
         

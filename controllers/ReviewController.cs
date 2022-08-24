@@ -28,13 +28,16 @@ namespace RestaurantReview.Controllers
             _jwtAuthentication = jwtAuthentication ?? throw new ArgumentNullException(nameof(jwtAuthentication));
         }
 
-        [HttpPost("/api/v1/restaurants/review")]
+        [HttpPost("/api/v1/restaurants/reviews")]
         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> AddReview([FromBody] RestaurantReviewInput input)
         {
             var user = await UserController.GetUserFromTokenAsync(_userRepository, Request);
 
             var restaurantId = new ObjectId(input.RestaurantId);
+            Console.WriteLine(input.Review);
+            Console.WriteLine(restaurantId);
+            Console.WriteLine(input.UpdatedReview);
             var result = await _reviewsRepository.AddReviewAsync(user, restaurantId, input.Review);
 
             return result != null
@@ -42,29 +45,29 @@ namespace RestaurantReview.Controllers
                 : BadRequest(new ReviewResponse());
         }
 
-        [HttpPut("/api/v1/restaurants/review")]
+        [HttpPut("/api/v1/restaurants/reviews")]
         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> UpdateReviewAsync([FromBody] RestaurantReviewInput input)
         {
             var user = await UserController.GetUserFromTokenAsync(_userRepository, Request);
 
-            var restaurantId = new ObjectId(input.RestaurantId);
+         
             var reviewId = new ObjectId(input.reviewId);
-            var result = await _reviewsRepository.UpdateReviewAsync( restaurantId, reviewId,  user, input.Review);
+            var result = await _reviewsRepository.UpdateReviewAsync(  reviewId,  user, input.Review);
 
             return result != null
                 ? (ActionResult)Ok(new ReviewResponse())
                 : BadRequest(new ReviewResponse());
         }
 
-        [HttpDelete("/api/v1/restaurants/review")]
+        [HttpDelete("/api/v1/restaurants/reviews")]
         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> DeleteReviewAsync([FromBody] RestaurantReviewInput input)
         {
-            var restaurantId = new ObjectId(input.RestaurantId);
+           
             var reviewId = new ObjectId(input.reviewId);
             var user = await UserController.GetUserFromTokenAsync(_userRepository, Request);
-            var result = await _reviewsRepository.DeleteReviewAsync(restaurantId, reviewId, user);
+            var result = await _reviewsRepository.DeleteReviewAsync( reviewId, user);
 
             return result != null
                 ? (ActionResult)Ok(new ReviewResponse())

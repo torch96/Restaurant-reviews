@@ -46,6 +46,24 @@ namespace RestaurantReview.Repositories
            /* var restaurant = await _restaurantsCollection.Find(Builders<Restaurant>.Filter.Eq(r => r.Id, restaurantId))
                 .FirstOrDefaultAsync(cancellationToken);
             return restaurant;*/
+            Console.WriteLine("RestaurantId: " + restaurantId);
+            var test = await _restaurantsCollection.Aggregate()
+                .Match(Builders<Restaurant>.Filter.Eq(x => x.Id, restaurantId))
+                .Lookup  (
+                _reviewsCollection, 
+                r => r.Id, 
+                c => c.RestaurantId, 
+                (Restaurant r) => r.Reviews)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            Console.WriteLine("test: " + test.Reviews);
+            var restuarantObject = new ObjectId(restaurantId);
+            
+            var y = await _reviewsCollection.Aggregate().Match(Builders<Review>.Filter.Eq(x => x.RestaurantId, restuarantObject)).ToListAsync(cancellationToken);
+            Console.WriteLine("test: " + y.Count);
+            
+          
+
             return await  _restaurantsCollection.Aggregate()
                 .Match(Builders<Restaurant>.Filter.Eq(x => x.Id, restaurantId))
                 .Lookup  (
