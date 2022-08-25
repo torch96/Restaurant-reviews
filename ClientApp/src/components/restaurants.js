@@ -77,11 +77,13 @@ const Restaurant = props => {
             <h3>{restaurant.title}</h3>
             <img src={"https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/" + restaurant.address.coord[1] + "," + restaurant.address.coord[0] +"/16?mapSize=350,400&pp="+ restaurant.address.coord[1] + "," + restaurant.address.coord[0]+"&key=AohnDNk_k1STAWaPrlL114lEdu9SABRTEAsJdSKsC-d020EmFCRwQxOVaf_qCPdM"} className="posterBig mx-auto d-block" ></img>
             <div className="card  card-body border-dark ">
-            <p>
-            <strong>Cuisine: </strong>{restaurant.cuisine}<br/>
-            <strong>Address: </strong>{restaurant.address.building} {restaurant.address.street}
-          </p>
-          <p><strong> zipcode: </strong> {restaurant.address.coord} </p>
+            
+              <p><strong>Cuisine: </strong>{restaurant.cuisine}<br/></p>
+            
+              <p><strong>Address: </strong>{restaurant.address.building} {restaurant.address.street}</p>
+            
+              <p><strong> zipcode: </strong> {restaurant.address.zipcode} </p>
+            
             </div>
           </div>
       
