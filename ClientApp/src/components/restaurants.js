@@ -7,7 +7,13 @@ const Restaurant = props => {
   const initialRestaurantState = {
     id: null,
     name: "",
-    address: {},
+    address: {
+      building: "",
+      coord:[],
+      street: "",
+      zipcode: ""
+
+    },
     cuisine: "",
     reviews: [""]
   };
@@ -16,6 +22,7 @@ const Restaurant = props => {
     email: "",
     password: "",
   };
+  
   const [restaurant, setRestaurant] = useState(initialRestaurantState);
   const [user, setUser] = useState(initialUserState);
   const getRestaurant = id => {
@@ -23,7 +30,7 @@ const Restaurant = props => {
       .then(response => {
         console.log(response.data);
         setRestaurant(response.data);
-       
+        console.log(restaurant.address.coord);
       })
       .catch(e => {
         console.log(e,id);
@@ -57,18 +64,24 @@ const Restaurant = props => {
       });
   };
 
+  const getMap =() => {
+    
+
+    }
+
   return (
     <div>
       {restaurant ? (   
         <div>
           <div className="movieInfo card w-50 border-dark mx-auto d-block">
             <h3>{restaurant.title}</h3>
-            <img src={restaurant.poster} className="posterBig mx-auto d-block" ></img>
+            <img src={"https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/" + restaurant.address.coord[1] + "," + restaurant.address.coord[0] +"/16?mapSize=350,400&pp="+ restaurant.address.coord[1] + "," + restaurant.address.coord[0]+"&key=AohnDNk_k1STAWaPrlL114lEdu9SABRTEAsJdSKsC-d020EmFCRwQxOVaf_qCPdM"} className="posterBig mx-auto d-block" ></img>
             <div className="card  card-body border-dark ">
             <p>
             <strong>Cuisine: </strong>{restaurant.cuisine}<br/>
-            <strong>Address: </strong>{restaurant.address.building} {restaurant.address.street}, {restaurant.address.zipcode}
+            <strong>Address: </strong>{restaurant.address.building} {restaurant.address.street}
           </p>
+          <p><strong> zipcode: </strong> {restaurant.address.coord} </p>
             </div>
           </div>
       

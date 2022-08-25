@@ -48,7 +48,7 @@ function App() {
         <div className="container-fluid">
         <li className="navbar-brand nav-item">
 
-        <a className="navbar-brand" href="/restaurants">{}Restaurant Reviews</a>
+        <a className="navbar-brand" href="/restaurants">{}New York Restaurants</a>
           </li>
           <div className="collapse navbar-collapse" id="navbarCollapse">
             <ul className="navbar-nav me-auto mb-2 mb-md-0">
@@ -93,7 +93,7 @@ function App() {
         <Switch>
 
         
-          <Route exact path={["/", "/restaurants"]} component={RestaurantsList} />
+          <Route exact path={["/", "/index.html","/restaurants"]} component={RestaurantsList} />
           
           <Route 
             path="/restaurants/:id/review"
