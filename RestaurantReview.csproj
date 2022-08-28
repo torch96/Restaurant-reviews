@@ -44,7 +44,7 @@
 			WorkingDirectory="clientApp"
 			Command="npm install"
 		/>
-    <Exec WorkingDirectory="clientApp\build" Command="npm run build" />
+    <Exec WorkingDirectory="clientApp" Command="npm run build" />
  
     <ItemGroup>
       <DistFiles Include="$(SpaRoot)build\**" />
