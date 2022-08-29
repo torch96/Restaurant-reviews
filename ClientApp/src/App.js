@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { useHistory,Switch, Route, Link } from "react-router-dom";
+import React, {  useEffect } from "react";
+import { useHistory,Switch, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import AddReview from "./components/add-review";
 import Restaurant from "./components/restaurants";
 import RestaurantsList from "./components/restaurants-list";
-import Home from "./components/home";
 import Login from "./components/login";
 import SignUp from "./components/register";
 import loginDataService from "./services/loginAuth";
@@ -60,8 +59,8 @@ function App() {
               
             { (localStorage.getItem("jwt") != null) ? (
               <li className="nav-item" >
-              <a onClick={logout} className="nav-link" style={{cursor:'pointer'}}>
-                Logout {}
+              <a href="/" onClick={logout} className="nav-link" style={{cursor:'pointer'}}>
+                Logout 
               </a>
             </li>
             ) : (        
@@ -124,8 +123,8 @@ function App() {
 
       
       <footer className="container">
-        <p className="float-end"><a href="#">Back to top</a></p>
-        <p>© 2017–2021 Company, Inc. · <a href="#">Privacy</a> · <a href="#">Terms</a></p>
+        <p className="float-end"><a href="/">Back to top</a></p>
+        <p>© 2017–2021 Company, Inc. · <a href="/">Privacy</a> · <a href="/">Terms</a></p>
       </footer>
     </div></div>
   );

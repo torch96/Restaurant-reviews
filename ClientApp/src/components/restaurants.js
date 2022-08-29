@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import RestaurantDataService from "../services/restaurant";
 import loginDataService from "../services/loginAuth";
 import { Link } from "react-router-dom";
@@ -25,7 +25,9 @@ const Restaurant = props => {
   
   const [restaurant, setRestaurant] = useState(initialRestaurantState);
   const [user, setUser] = useState(initialUserState);
-  const getRestaurant = id => {
+ 
+ 
+  /*const getRestaurant = id => {
     RestaurantDataService.get(id)
       .then(response => {
         console.log(response.data);
@@ -35,19 +37,30 @@ const Restaurant = props => {
       .catch(e => {
         console.log(e,id);
       });
-  };
+  };*/
   const getUser = () => {
     loginDataService.getUser()
       setUser(loginDataService.getUser());
     
     
   } 
-  
+  useCallback( (id = props.match.params.id ) => {
+      RestaurantDataService.get(id)
+        .then(response => {
+          console.log(response.data);
+          setRestaurant(response.data);
+          
+        })
+        .catch(e => {
+          console.log(e,id);
+        });
+    },[ props.match.params.id]);
+
   useEffect(() => {
-    getRestaurant(props.match.params.id);
+    
     getUser();
     
-  }, [props.match.params.id]);
+  }, []);
 
   const deleteReview = (reviewsId, index) => {
     RestaurantDataService.deleteReview(reviewsId, loginDataService.getJwt())
@@ -64,18 +77,14 @@ const Restaurant = props => {
       });
   };
 
-  const getMap =() => {
-    
-
-    }
-
+  
   return (
     <div>
       {restaurant ? (   
         <div>
-          <div className="movieInfo card w-50 border-dark mx-auto d-block">
+          <div className="movieInfo  mx-auto d-block">
             <h3>{restaurant.title}</h3>
-            <img src={"https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/" + restaurant.address.coord[1] + "," + restaurant.address.coord[0] +"/16?mapSize=350,400&pp="+ restaurant.address.coord[1] + "," + restaurant.address.coord[0]+"&key=AohnDNk_k1STAWaPrlL114lEdu9SABRTEAsJdSKsC-d020EmFCRwQxOVaf_qCPdM"} className="posterBig mx-auto d-block" ></img>
+            <img src={"https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/" + restaurant.address.coord[1] + "," + restaurant.address.coord[0] +"/16?mapSize=350,400&pp="+ restaurant.address.coord[1] + "," + restaurant.address.coord[0]+"&key=AohnDNk_k1STAWaPrlL114lEdu9SABRTEAsJdSKsC-d020EmFCRwQxOVaf_qCPdM"} alt="" className="posterBig mx-auto d-block" ></img>
             <div className="card  card-body border-dark ">
             
               <p><strong>Cuisine: </strong>{restaurant.cuisine}<br/></p>
@@ -87,9 +96,9 @@ const Restaurant = props => {
             </div>
           </div>
       
-          <Link to={"/restaurants/" + props.match.params.id + "/review"} className="btn btn-primary">
-            Add Review
-          </Link>
+         <p> <Link to={"/restaurants/" + props.match.params.id + "/review"} className="btn btn-primary">
+            Add Review 
+          </Link> </p>
           
           <h4> Reviews </h4>
          
@@ -108,7 +117,7 @@ const Restaurant = props => {
                        </p>
                        {user.email === review.email &&
                           <div className="row">
-                            <a onClick={() => deleteReview(review._id, index)} className="btn btn-primary col-lg-5 mx-1 mb-1">Delete</a>
+                            <a href={ "/restaurants/" + props.match.params.id + "/review"} onClick={() => deleteReview(review._id, index)} className="btn btn-primary col-lg-5 mx-1 mb-1">Delete</a>
                             <Link to={{
                               pathname: "/restaurants/" + props.match.params.id + "/review",
                               state: {

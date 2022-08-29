@@ -5,12 +5,11 @@ import "../index.css";
 const RestaurantsList = props => {
   const [restaurants, setRestaurants] = useState([]);
   const [searchTitle, setSearchTitle ] = useState("");
-  const [searchGenres, setSearchGenre ] = useState("");
-  const [genres, setGenres] = useState(["All Genres"]);
+ 
 
   useEffect(() => {
     retrieveRestaurants();
-   // retrieveGenres();
+   
   }, []);
 
   const onChangeSearchName = e => {
@@ -39,9 +38,6 @@ const RestaurantsList = props => {
 
 
 
-  const refreshList = () => {
-    retrieveRestaurants();
-  };
 
   const find = (query, by) => {
     RestaurantDataService.find(query, by)
@@ -59,17 +55,11 @@ const RestaurantsList = props => {
   };
   
 
-  const findByGenre = () => {
-    if (searchGenres == "All Genres") {
-      refreshList();
-    } else {
-      find(searchGenres, "genres")
-    }
-  };
+
 
   const handleKeyPress = (event) => {
     
-    if(event.key === 'Enter'){
+    if(event.key ==='Enter'){
       findByName();
     }
   }
@@ -113,8 +103,8 @@ const RestaurantsList = props => {
               <div className="card movie border-dark ">
                 <div className="card-body">
                   <h5 className="card-title">{restaurant.name}</h5>
-                  <img src={"https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/" + restaurant.address.coord[1] + "," + restaurant.address.coord[0] +"/16?mapSize=300,400&pp="+ restaurant.address.coord[1] + "," + restaurant.address.coord[0]+"&key=AohnDNk_k1STAWaPrlL114lEdu9SABRTEAsJdSKsC-d020EmFCRwQxOVaf_qCPdM"} className="poster mx-auto d-block" ></img>
-                  <p className="card-text"><strong>Cuisine: </strong>{restaurant.cuisine}<br/></p>
+                  <img src={"https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/" + restaurant.address.coord[1] + "," + restaurant.address.coord[0] +"/16?mapSize=300,400&pp="+ restaurant.address.coord[1] + "," + restaurant.address.coord[0]+"&key=AohnDNk_k1STAWaPrlL114lEdu9SABRTEAsJdSKsC-d020EmFCRwQxOVaf_qCPdM"} alt="" className="poster mx-auto d-block" ></img>
+                  <p className="card-text"><strong>Cuisine: </strong>{restaurant.cuisine}</p>
                   <p> <strong>Address: </strong>{address}</p>
                   <p><strong>zipcode: </strong>{restaurant.address.zipcode}</p>
                   <p></p>
@@ -122,7 +112,7 @@ const RestaurantsList = props => {
                   <Link to={"/restaurants/"+restaurant._id} className="btn btn-primary col-lg-5 mx-1 mb-1">
                     View Reviews
                   </Link>
-                  <a target="_blank" href={"https://www.bing.com/maps?q=" + address + restaurant.address.zipcode} className="btn btn-primary col-lg-5 mx-1 mb-1">View Map</a>
+                  <a  href={"https://www.bing.com/maps?q=" + address + restaurant.address.zipcode} className="btn btn-primary col-lg-5 mx-1 mb-1">View Map</a>
                   
                   </div>
                 </div>

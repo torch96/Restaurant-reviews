@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import loginDataService from "../services/loginAuth.js";
-import { useHistory,Link } from "react-router-dom";
+import { useHistory} from "react-router-dom";
 import "../index.css";
 
 const Login = props => {

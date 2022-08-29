@@ -1,5 +1,5 @@
 //import Axios from "../Axios-common";
-import {useHistory} from "react-router-dom";
+
 const URL = "https://localhost:5000/api/v1";
 
 
@@ -48,7 +48,7 @@ class loginDataService {
   }
 
  async logout(jwt) {
-    const response = await fetch(URL + '/users/logout', {
+    await fetch(URL + '/users/logout', {
       method: 'POST',
       mode: "cors",
       headers: {

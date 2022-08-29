@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { Link,useHistory } from "react-router-dom";
+import React, { useState } from "react";
+
 import loginDataService from "../services/loginAuth.js";
 
 const SignUp = props => {
-    const history = useHistory()
-
+    
 	const [name, setName] = useState('')
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 
 	async function registerUser(event) {
 		event.preventDefault()
-       const result = loginDataService.register(
+        loginDataService.register(
             name,
             email, 
             password)
