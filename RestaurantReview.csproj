@@ -44,7 +44,7 @@
 			WorkingDirectory="clientApp"
 			Command="npm install"
 		/>
-    <Exec WorkingDirectory="clientApp" Command="CI=false " />
+    
     <Exec WorkingDirectory="clientApp" Command="npm run build" />
     
     <ItemGroup>
