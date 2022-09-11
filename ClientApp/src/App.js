@@ -28,8 +28,17 @@ function App() {
 
   async function logout() {
     
-    loginDataService.logout(localStorage.getItem("jwt"));
-    history.push("/  ");
+   const x = await loginDataService.logout(localStorage.getItem("jwt"))
+    .then(response => {
+    history.push("/");
+    history.go(0);
+    localStorage.removeItem("jwt");
+    }
+    ).catch(e => {
+      console.log(e);
+    }
+    );
+    localStorage.removeItem("jwt");
     setUser(null)
   }
   
@@ -43,7 +52,7 @@ function App() {
       
         
       <header className="fixed-top ">
-      <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <nav className="navbar navbar-expand-md fixed-top ">
         <div className="container-fluid">
         <li className="navbar-brand nav-item">
 
