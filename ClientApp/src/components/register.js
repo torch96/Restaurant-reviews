@@ -17,6 +17,7 @@ const SignUp = props => {
             .then(response => {
                 console.log(response.data);
                 props.history.push("/");
+                props.history.go(0);
             }).catch(e => {
                 console.log(e);
             }

@@ -18,7 +18,7 @@ const Login = props => {
 
         console.log(response.data);        
         history.push("/" );
-        
+        history.go(0);
       }
       ).catch(e => {
         console.log(e);

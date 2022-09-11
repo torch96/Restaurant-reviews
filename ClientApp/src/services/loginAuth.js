@@ -1,6 +1,6 @@
 //import Axios from "../Axios-common";
 
-const URL = "https://localhost:5000/api/v1";
+const URL = "/api/v1";
 
 
 class loginDataService {
@@ -48,7 +48,7 @@ class loginDataService {
   }
 
  async logout(jwt) {
-    await fetch(URL + '/users/logout', {
+   const response = await fetch(URL + '/users/logout', {
       method: 'POST',
       mode: "cors",
       headers: {
@@ -58,7 +58,7 @@ class loginDataService {
       
     })
     localStorage.removeItem("jwt");
-    
+    return await response.json();
     }
 
 

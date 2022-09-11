@@ -27,37 +27,28 @@ const Restaurant = props => {
   const [user, setUser] = useState(initialUserState);
  
  
-  /*const getRestaurant = id => {
+  const getRestaurant = id => {
     RestaurantDataService.get(id)
       .then(response => {
-        console.log(response.data);
-        setRestaurant(response.data);
+        console.log(response);
+        setRestaurant(response);
         console.log(restaurant.address.coord);
       })
       .catch(e => {
         console.log(e,id);
       });
-  };*/
+  };
+  
   const getUser = () => {
     loginDataService.getUser()
       setUser(loginDataService.getUser());
     
     
   } 
-  useCallback( (id = props.match.params.id ) => {
-      RestaurantDataService.get(id)
-        .then(response => {
-          console.log(response.data);
-          setRestaurant(response.data);
-          
-        })
-        .catch(e => {
-          console.log(e,id);
-        });
-    },[ props.match.params.id]);
+ 
 
   useEffect(() => {
-    
+    getRestaurant(props.match.params.id);
     getUser();
     
   }, []);

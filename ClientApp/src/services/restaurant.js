@@ -1,21 +1,53 @@
 import http from "../http-common";
-const URL = "https://localhost:5000/api/v1/restaurants/";
+const URL = "/api/v1/restaurants/";
 class RestaurantDataService {
   async getAll(page = 0) {
     console.log(URL + `restaurants`);
-    return http.get( URL );
     
+
+   const response = await fetch(URL , {
+      method: 'GET',
+      mode: "cors",
+      headers: {
+        
+        'Content-Type': 'application/json',
+      },
+    
+    })
+
+    return response.json();
   }
 
   async get(id) {
-    console.log(URL + `${id}`);
-    console.log(URL + `id/${id}`);
-    return http.get(URL + `id/${id}`);
+
+    const response = await fetch(URL +`id/${id}` , {
+      method: 'GET',
+      mode: "cors",
+      headers: {
+        
+        'Content-Type': 'application/json',
+      },
+    
+    })
+
+    return await response.json();
+  
   }
 
   async find(query, by = "name", page = 0) {
     console.log(URL + `search/${query}`);
-    return http.get( URL +`search/${query}`);
+    const response = await fetch(URL + `search/${query}`, {
+      method: 'GET',
+      mode: "cors",
+      headers: {
+        
+        'Content-Type': 'application/json',
+      },
+    
+    })
+
+    return await response.json();
+    
   } 
 
   async createReview(data) {
