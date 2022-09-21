@@ -54,14 +54,14 @@ function App() {
       <header className="fixed-top ">
       <nav className="navbar navbar-expand-md fixed-top ">
         <div className="container-fluid">
-        <li className="navbar-brand nav-item">
+        <div className="navbar-brand nav-item">
 
-        <a className="navbar-brand" href="/restaurants">{}New York Restaurants</a>
-          </li>
+        <a className="navbar-brand" href="/restaurants">New York Restaurants</a>
+          </div>
           <div className="collapse navbar-collapse" id="navbarCollapse">
             <ul className="navbar-nav me-auto mb-2 mb-md-0">
               
-            <li className="nav-item">
+            <li className="nav-item menuItem">
            <a className="nav-link" href="/restaurants">Search
            </a>
           </li>
@@ -73,13 +73,13 @@ function App() {
               </a>
             </li>
             ) : (        
-            <><li className="nav-item">
+            <><li className="nav-item menuItem">
                       <a className="nav-link" href="/users/login">Login
                       </a>
-                    </li><li className="nav-item">
+                    </li><li className="nav-item menuItem">
                         <a className="nav-link" href="/users/register">register
                         </a>
-                      </li></>
+                   </li></>
             )}
 
           

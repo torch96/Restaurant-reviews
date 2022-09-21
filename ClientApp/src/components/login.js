@@ -49,7 +49,7 @@ const Login = props => {
         <div className="form-group">
           <label htmlFor="password">Password</label>
           <input
-            type="text"
+            type="password"
             className="form-control"
             id="password"
             required
