@@ -67,29 +67,37 @@ const Restaurant = props => {
         console.log(e);
       });
   };
-
+/*  function loadMapScenario() {
+    var map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
+        /* No need to set credentials if already passed in URL 
+        center: new Microsoft.Maps.Location(restaurant.address.coord[1] , restaurant.address.coord[0])
+    });
+    map.setView({ mapTypeId: Microsoft.Maps.MapTypeId.birdseye, heading: 90 });
+  
+} */ 
   
   return (
     <div>
       {restaurant ? (   
         <div>
           <div className="movieInfo  mx-auto d-block">
-            <h3>{restaurant.title}</h3>
-            <img src={"https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/" + restaurant.address.coord[1] + "," + restaurant.address.coord[0] +"/16?mapSize=350,400&pp="+ restaurant.address.coord[1] + "," + restaurant.address.coord[0]+"&key=AohnDNk_k1STAWaPrlL114lEdu9SABRTEAsJdSKsC-d020EmFCRwQxOVaf_qCPdM"} alt="" className="posterBig mx-auto d-block" ></img>
-            <div className="card card-body border-dark restaurantCard ">
+           
+            <img src={"https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/" + restaurant.address.coord[1] + "," + restaurant.address.coord[0] +"/16?mapSize=650,700&pp="+ restaurant.address.coord[1] + "," + restaurant.address.coord[0]+"&key=AohnDNk_k1STAWaPrlL114lEdu9SABRTEAsJdSKsC-d020EmFCRwQxOVaf_qCPdM"} alt="" className="posterBig mx-auto d-block " ></img>
+            <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=AohnDNk_k1STAWaPrlL114lEdu9SABRTEAsJdSKsC-d020EmFCRwQxOVaf_qCPdMy&callback=loadMapScenario' async defer></script>
             
+            
+            <div className="card card-body border-dark restaurantCard ">
+             <h3>{restaurant.name}</h3>
               <p className="restaurantBody"><strong>Cuisine: </strong>{restaurant.cuisine}</p>
             
-              <p className="restaurantBody"><strong>Address: </strong>{restaurant.address.building} {restaurant.address.street}</p>
-            
-              <p className="restaurantBody"><strong> zipcode: </strong> {restaurant.address.zipcode} </p>
+              <p className="restaurantBody"><strong>Address: </strong>{restaurant.address.building} {restaurant.address.street}, {restaurant.address.zipcode}</p>
+              
+              <a  href={"https://www.bing.com/maps?q=" + restaurant.address.street + restaurant.address.zipcode} className="btn btn-primary col-lg-5 mx-1 mb-1 btnSize" >View Map</a>
             
             </div>
           </div>
       
-         <p> <Link to={"/restaurants/" + props.match.params.id + "/review"} className="btn btn-primary">
-            Add Review 
-          </Link> </p>
+        
           
           <h4> Reviews </h4>
          
@@ -128,6 +136,11 @@ const Restaurant = props => {
               </div>
               )}
             </div>
+            
+             
+             <p > <Link to={"/restaurants/" + props.match.params.id + "/review"} className="btn btn-primary addreview float-right">
+            Add Review 
+          </Link> </p>
           </div>
         ) : (
         <div>

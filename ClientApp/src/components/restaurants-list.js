@@ -104,18 +104,22 @@ const RestaurantsList = props => {
           return (
             <div className="col-lg-4 pb-1 container-sm ">
               <div className="card movie border-dark ">
+                
+                
                 <div className="card-body">
-                  <h5 className="card-title">{restaurant.name}</h5>
-                  <img src={"https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/" + restaurant.address.coord[1] + "," + restaurant.address.coord[0] +"/16?mapSize=300,400&pp="+ restaurant.address.coord[1] + "," + restaurant.address.coord[0]+"&key=AohnDNk_k1STAWaPrlL114lEdu9SABRTEAsJdSKsC-d020EmFCRwQxOVaf_qCPdM"} alt="" className="poster mx-auto d-block" ></img>
-                  <p className="card-text"><strong>Cuisine: </strong>{restaurant.cuisine}</p>
-                  <p> <strong>Address: </strong>{address}</p>
-                  <p><strong>zipcode: </strong>{restaurant.address.zipcode}</p>
+                  <h5 className="card-title content">{restaurant.name}</h5>
+                  <hr></hr>
+                  <img src={"https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/" + restaurant.address.coord[1] + "," + restaurant.address.coord[0] +"/16?mapSize=500,550&pp="+ restaurant.address.coord[1] + "," + restaurant.address.coord[0]+"&key=AohnDNk_k1STAWaPrlL114lEdu9SABRTEAsJdSKsC-d020EmFCRwQxOVaf_qCPdM"} alt="" className="poster mx-auto d-block" ></img>
+                  <hr></hr>
+                  <p className="card-text content mt-1"><strong>Cuisine: </strong>{restaurant.cuisine}</p>
+                  <p className="content"> <strong>Address: </strong>{address}</p>
+                  <p className="content"><strong>zipcode: </strong>{restaurant.address.zipcode}</p>
                   <p></p>
-                  <div className="row">
-                  <Link to={"/restaurants/"+restaurant._id} className="btn btn-primary col-lg-5 mx-1 mb-1">
-                    View Reviews
+                  <div className="row buttonsRow content" >
+                  <Link to={"/restaurants/"+restaurant._id} className="btn btn-primary col-lg-5 mx-1 mb-1 btnSize" >
+                  Reviews
                   </Link>
-                  <a  href={"https://www.bing.com/maps?q=" + address + restaurant.address.zipcode} className="btn btn-primary col-lg-5 mx-1 mb-1">View Map</a>
+                  <a  href={"https://www.bing.com/maps?q=" + address + restaurant.address.zipcode} className="btn btn-primary col-lg-5 mx-1 mb-1 btnSize" >View Map</a>
                   
                   </div>
                 </div>
