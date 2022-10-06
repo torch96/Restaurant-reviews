@@ -139,10 +139,11 @@ const Restaurant = props => {
               )}
             </div>
             
-             
-             <p > <Link to={"/restaurants/" + props.match.params.id + "/review"} className="btn btn-primary addreview float-right">
+            <div> 
+             <p className="float-right reviewButton" > <Link to={"/restaurants/" + props.match.params.id + "/review"} className="btn btn-primary addreview float-right">
             Add Review 
           </Link> </p>
+          </div>
           </div>
         ) : (
         <div>

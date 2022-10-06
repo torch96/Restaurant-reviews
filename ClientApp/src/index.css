@@ -50,6 +50,9 @@ img{
   align-items: bottom;
   width: 100%;
 }
+.reviewButton{
+  text-align: right;
+}
 hr{
   height: 2px;
   border: 1px solid #000000;
