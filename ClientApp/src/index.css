@@ -41,7 +41,7 @@ img{
   
 }
 .btnSize{
-  height: 20%;
+  height: 19%;
 }
 .buttonsRow{
   
@@ -51,11 +51,15 @@ img{
   width: 100%;
 }
 hr{
-  height: 1px;
+  height: 2px;
   border: 1px solid #000000;
+  border-color: #000000;
   background-color: #000000;
   width: 100%;
   margin:0;
+}
+.btnReview{
+  width: 20%;
 }
 .content{
   margin: 5px;
@@ -79,8 +83,8 @@ hr{
 .addreview{
   margin: 5%;
 }
-.mt-1{
-  margin-top: 40px;
+.mtd{
+  margin-top: 10px;
 }
 p{
   margin-bottom: 3px;

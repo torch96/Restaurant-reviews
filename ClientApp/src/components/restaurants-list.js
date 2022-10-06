@@ -114,6 +114,7 @@ const RestaurantsList = props => {
                   <p className="card-text content mt-1"><strong>Cuisine: </strong>{restaurant.cuisine}</p>
                   <p className="content"> <strong>Address: </strong>{address}</p>
                   <p className="content"><strong>zipcode: </strong>{restaurant.address.zipcode}</p>
+                  <p className="content"><strong>Borough: </strong>{restaurant.borough}</p>
                   <p></p>
                   <div className="row buttonsRow content" >
                   <Link to={"/restaurants/"+restaurant._id} className="btn btn-primary col-lg-5 mx-1 mb-1 btnSize" >

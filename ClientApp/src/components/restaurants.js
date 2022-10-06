@@ -14,6 +14,7 @@ const Restaurant = props => {
       zipcode: ""
 
     },
+    borough: "",
     cuisine: "",
     reviews: [""]
   };
@@ -87,12 +88,13 @@ const Restaurant = props => {
             
             
             <div className="card card-body border-dark restaurantCard ">
-             <h3>{restaurant.name}</h3>
-              <p className="restaurantBody"><strong>Cuisine: </strong>{restaurant.cuisine}</p>
+             <h3 className="content">{restaurant.name}</h3>
+             <hr/>
+              <p className="restaurantBody content"><strong>Cuisine: </strong>{restaurant.cuisine}</p>
             
-              <p className="restaurantBody"><strong>Address: </strong>{restaurant.address.building} {restaurant.address.street}, {restaurant.address.zipcode}</p>
-              
-              <a  href={"https://www.bing.com/maps?q=" + restaurant.address.street + restaurant.address.zipcode} className="btn btn-primary col-lg-5 mx-1 mb-1 btnSize" >View Map</a>
+              <p className="restaurantBody content"><strong>Address: </strong>{restaurant.address.building} {restaurant.address.street}, {restaurant.address.zipcode}</p>
+              <p className="restaurantBody content"> <strong>Borough: </strong>{restaurant.borough} </p>
+              <a  href={"https://www.bing.com/maps?q=" + restaurant.address.street + restaurant.address.zipcode} className="btnReview btn btn-primary col-lg-5 mx-1 mb-1 btnSize mtd" >Directions</a>
             
             </div>
           </div>
@@ -109,14 +111,14 @@ const Restaurant = props => {
                  <div className="col-lg-4 pb-1" key={index}>
                    <div className="card">
                      <div className="card-body">
-                       <p className="card-text">
+                       <p className="content card-text">
                          {review.text}<br/>
                          <strong>User: </strong>{review.name}<br/>
                          <strong>Date: </strong>{review.date}
                        </p>
                        {user.email === review.email &&
                           <div className="row">
-                            <a href={ "/restaurants/" + props.match.params.id + "/review"} onClick={() => deleteReview(review._id, index)} className="btn btn-primary col-lg-5 mx-1 mb-1">Delete</a>
+                            <a href={ "/restaurants/" + props.match.params.id + "/review"} onClick={() => deleteReview(review._id, index)} className="btn btn-primary col-lg-5 mx-1 mb-1 content">Delete</a>
                             <Link to={{
                               pathname: "/restaurants/" + props.match.params.id + "/review",
                               state: {
